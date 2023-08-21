@@ -28,6 +28,8 @@ namespace Api6SinTlsSerilog
                 Debugger.Break();
             });
 
+            builder.Host.UseSerilog(); //Here Serilog.AspNetCore needed
+
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();

@@ -1,24 +1,25 @@
-﻿using Serilog;
+﻿//using Serilog;
 
 namespace Api6SinTlsSerilog.Services;
 
 public class MyService: IMyService
 {
-    private readonly Serilog.ILogger _logger;
-    public MyService()
+    private readonly ILogger<MyService> _logger;
+    public MyService(ILogger<MyService> logger)
     {
-        _logger = Log.ForContext<MyService>();
+        _logger = logger;
+        //_logger = Log.ForContext<MyService>();
     }
     public string GetMyData()
     {
         try
         {
-            _logger.Information("Insertando una linea de log");
+            _logger.LogInformation("Insertando una linea de log");
             return "This is my service call";
         }
         catch (Exception ex)
         {
-            _logger.Error($"Ha ocurrido un error: {ex.Message}");
+            _logger.LogError($"Ha ocurrido un error: {ex.Message}");
             return ex.Message;
         }
 
