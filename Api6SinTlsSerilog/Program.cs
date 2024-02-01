@@ -14,13 +14,7 @@ namespace Api6SinTlsSerilog
             // Add services to the container.
             builder.Services.AddTransient<IMyService, MyService>();
 
-            Log.Logger = new LoggerConfiguration()
-                .WriteTo
-                .MSSqlServer(
-                    //connectionString: "Server=localhost;Database=LogsFromSerilog;Integrated Security=SSPI;",
-                    connectionString: "Server=localhost;Database=LogsFromSerilog;Trusted_Connection=True;TrustServerCertificate=True;",
-                    sinkOptions: new MSSqlServerSinkOptions { TableName = "LogEvents" })
-                .CreateLogger();
+            SerilogConfigurator.Configure(true, true, true, "Server=localhost;Database=DbForLogs;Trusted_Connection=True;TrustServerCertificate=True;");
 
             Serilog.Debugging.SelfLog.Enable(msg =>
             {
