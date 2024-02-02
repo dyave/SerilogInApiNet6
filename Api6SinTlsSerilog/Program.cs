@@ -13,6 +13,7 @@ namespace Api6SinTlsSerilog
 
             // Add services to the container.
             builder.Services.AddTransient<IMyService, MyService>();
+            builder.Services.AddSingleton<IHostInfo, HostInfo>();
 
             SerilogConfigurator.Configure(true, true, true, "Server=localhost;Database=DbForLogs;Trusted_Connection=True;TrustServerCertificate=True;");
 

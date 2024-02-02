@@ -12,9 +12,15 @@ public static class SerilogConfigurator
         if (dbSink && conStr == "") throw new Exception();
 
         var logger = new LoggerConfiguration()
+            //.MinimumLevel.Debug()
+            //.MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+            //.Enrich.FromLogContext();
             .MinimumLevel.Debug()
-            .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-            .Enrich.FromLogContext();
+            .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+            .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information)
+            .MinimumLevel.Override("System", LogEventLevel.Warning)
+            .MinimumLevel.Override("Microsoft.AspNetCore.Authentication", LogEventLevel.Warning)
+            ;
 
         if (consoleSink)
         {

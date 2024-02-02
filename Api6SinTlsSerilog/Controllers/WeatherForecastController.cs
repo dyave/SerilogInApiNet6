@@ -1,4 +1,6 @@
 using Api6SinTlsSerilog.Services;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api6SinTlsSerilog.Controllers
@@ -18,14 +20,21 @@ namespace Api6SinTlsSerilog.Controllers
         //    _logger = logger;
         //}
         private readonly IMyService _myService;
-        public WeatherForecastController(IMyService myService)
+        private readonly IHostInfo _hostInfo;
+
+        public WeatherForecastController(IMyService myService, IHostInfo hostInfo)
         {
             _myService = myService;
+            _hostInfo = hostInfo;
         }
 
         [HttpGet(Name = "GetWeatherForecast")]
         public IEnumerable<WeatherForecast> Get()
         {
+            var host = HttpContext.Request.Host;
+            var ip = HttpContext.Connection.LocalIpAddress;
+            _hostInfo.Set(ip.ToString());
+
             string myData = _myService.GetMyData();
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
