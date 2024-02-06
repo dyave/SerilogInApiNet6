@@ -4,6 +4,7 @@ using Serilog.Sinks.MSSqlServer;
 using System;
 using System.Data;
 using Serilog.Core;
+using System.Net;
 
 namespace Api6SinTlsSerilog;
 
@@ -13,12 +14,13 @@ public static class SerilogConfigurator
     {
         if (dbSink && conStr == "") throw new Exception();
 
+        string hostName = Dns.GetHostName();
+        var hostIp = Dns.GetHostEntry(hostName).AddressList[1].ToString();
+
         var logger = new LoggerConfiguration()
-            //.MinimumLevel.Debug()
-            //.MinimumLevel.Override("Microsoft", LogEventLevel.Information)
             .Enrich.FromLogContext()
-            .Enrich.WithProperty("IpAddress", "123456")
-            .Enrich.With(new MyEnricher())
+            .Enrich.WithProperty("IpAddress", hostIp)
+            //.Enrich.With(new MyEnricher())
             .MinimumLevel.Debug()
             .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
             .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Warning)
