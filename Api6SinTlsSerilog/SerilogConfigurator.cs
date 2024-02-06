@@ -2,6 +2,8 @@
 using Serilog;
 using Serilog.Sinks.MSSqlServer;
 using System;
+using System.Data;
+using Serilog.Core;
 
 namespace Api6SinTlsSerilog;
 
@@ -14,10 +16,12 @@ public static class SerilogConfigurator
         var logger = new LoggerConfiguration()
             //.MinimumLevel.Debug()
             //.MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-            //.Enrich.FromLogContext();
+            .Enrich.FromLogContext()
+            .Enrich.WithProperty("IpAddress", "123456")
+            .Enrich.With(new MyEnricher())
             .MinimumLevel.Debug()
             .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
-            .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information)
+            .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Warning)
             .MinimumLevel.Override("System", LogEventLevel.Warning)
             .MinimumLevel.Override("Microsoft.AspNetCore.Authentication", LogEventLevel.Warning)
             ;
@@ -43,10 +47,7 @@ public static class SerilogConfigurator
         {
             logger.WriteTo.MSSqlServer(
                 connectionString: conStr,
-                columnOptions: new ColumnOptions()
-                {
-
-                },
+                columnOptions: GetColumnOptions(),
                 sinkOptions: new MSSqlServerSinkOptions()
                 {
                     TableName = "AppLogs",
@@ -58,5 +59,16 @@ public static class SerilogConfigurator
         }
 
         Log.Logger = logger.CreateLogger();
+    }
+
+    public static ColumnOptions GetColumnOptions()
+    {
+        var columnOptions = new ColumnOptions();
+
+        columnOptions.AdditionalColumns = new List<SqlColumn>
+            {
+                new SqlColumn { DataType = SqlDbType.VarChar, ColumnName = "IpAddress", DataLength = 50, AllowNull = true},
+            };
+        return columnOptions;
     }
 }

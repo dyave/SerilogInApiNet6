@@ -10,14 +10,17 @@ public class MyService: IMyService
     public MyService(ILogger<MyService> logger, IHostInfo hostInfo)
     {
         _logger = logger;
-        //_logger = Log.ForContext<MyService>();
         _hostInfo = hostInfo;
     }
     public string GetMyData()
     {
         try
         {
-            _logger.LogInformation("[IP: {hostIp}]Insertando una linea de log", _hostInfo.Get());
+            //Establecer una propiedad con MS Logging (LogContext.PushProperty en Serilog):
+            //_logger.BeginScope(new Dictionary<string, object> { ["IpAddress"] = _hostInfo.Get() });
+            _logger.LogInformation("Hola, {nombre}", "Pepo");
+            _logger.LogInformation("Hola, {nombre}.", "Pablo");
+
             return "This is my service call";
         }
         catch (Exception ex)
