@@ -5,12 +5,13 @@ using System;
 using System.Data;
 using Serilog.Core;
 using System.Net;
+using System.Configuration;
 
 namespace Api6SinTlsSerilog;
 
 public static class SerilogConfigurator
 {
-    public static void Configure(bool consoleSink, bool fileSink, bool dbSink, string conStr = "")
+    public static void Configure(bool consoleSink, bool fileSink, bool dbSink, IConfiguration configuration, string conStr)
     {
         if (dbSink && conStr == "") throw new Exception();
 
@@ -20,12 +21,13 @@ public static class SerilogConfigurator
         var logger = new LoggerConfiguration()
             .Enrich.FromLogContext()
             .Enrich.WithProperty("IpAddress", hostIp)
+            .ReadFrom.Configuration(configuration)
             //.Enrich.With(new MyEnricher())
-            .MinimumLevel.Debug()
-            .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
-            .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Warning)
-            .MinimumLevel.Override("System", LogEventLevel.Warning)
-            .MinimumLevel.Override("Microsoft.AspNetCore.Authentication", LogEventLevel.Warning)
+            //.MinimumLevel.Debug()
+            //.MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+            //.MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Warning)
+            //.MinimumLevel.Override("System", LogEventLevel.Warning)
+            //.MinimumLevel.Override("Microsoft.AspNetCore.Authentication", LogEventLevel.Warning)
             ;
 
         if (consoleSink)

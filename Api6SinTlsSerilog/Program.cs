@@ -10,12 +10,21 @@ namespace Api6SinTlsSerilog
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            var services = builder.Services;
+            var enviroment = builder.Environment;
+
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(enviroment.ContentRootPath)
+                .AddJsonFile(enviroment.ContentRootPath + $"\\appsettings.{enviroment.EnvironmentName}.json", optional: false, reloadOnChange: true)
+                .AddEnvironmentVariables().Build();
+
+            var conStr = configuration.GetConnectionString("LoggingDb");
 
             // Add services to the container.
             builder.Services.AddTransient<IMyService, MyService>();
             builder.Services.AddSingleton<IHostInfo, HostInfo>();
 
-            SerilogConfigurator.Configure(true, true, true, "Server=localhost;Database=DbForLogs;Trusted_Connection=True;TrustServerCertificate=True;");
+            SerilogConfigurator.Configure(true, true, true, configuration, "Server=localhost;Database=DbForLogs;Trusted_Connection=True;TrustServerCertificate=True;");
 
             Serilog.Debugging.SelfLog.Enable(msg =>
             {
