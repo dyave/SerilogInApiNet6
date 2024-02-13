@@ -20,6 +20,7 @@ public class MyService: IMyService
             //_logger.BeginScope(new Dictionary<string, object> { ["IpAddress"] = _hostInfo.Get() });
             _logger.LogInformation("Hola, {nombre}", "Pepo");
             _logger.LogInformation("Hola, {nombre}.", "Pablo");
+            _logger.LogError("Hubo error!");
 
             return "This is my service call";
         }
