@@ -57,6 +57,10 @@ public static class SerilogConfigurator
                 )
             );
 
+        var templateSample = "[{Timestamp:HH:mm:ss} {Level}] {Message}{NewLine}{Exception}{NewLine}";
+        logger.WriteTo.Logger(c => c.WriteTo.Console(
+            outputTemplate: templateSample
+            ));
 
         //if (consoleSink)
         //{

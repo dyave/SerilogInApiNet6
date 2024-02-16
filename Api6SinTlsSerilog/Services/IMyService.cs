@@ -2,5 +2,5 @@
 
 public interface IMyService
 {
-    string GetMyData();
+    string GetMyData(string tmpPara);
 }

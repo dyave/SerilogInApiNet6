@@ -35,7 +35,7 @@ namespace Api6SinTlsSerilog.Controllers
             var ip = HttpContext.Connection.LocalIpAddress;
             _hostInfo.Set(ip.ToString());
 
-            string myData = _myService.GetMyData();
+            string myData = _myService.GetMyData("");
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = DateTime.Now.AddDays(index),
